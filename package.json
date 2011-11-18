@@ -1,0 +1,18 @@
+{
+  "name":"genpkg",
+  "version":"0.0.1",
+  "description":"Generates NPM packages from single JavaScript files.",
+  "author":"Azer Koculu <azer@kodfabrik.com>",
+  "keywords":["package","packaging"],
+  "directories":{ "lib": "./lib" },
+  "main":"./lib/genpkg",
+  "repository": { "type":"git", "url" : "http://github.com/azer/genpkg-node.git" },
+  "bin":{
+    "genpkg":"./bin/genpkg"
+  },
+  "dependencies":{
+    "request":"2.x",
+    "highkick":"1.x",
+    "log4js":"0.x"
+  }
+}
