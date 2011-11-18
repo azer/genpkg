@@ -11,4 +11,10 @@ $ ls node_modules
 util/
 ```
 
+## Tests
+
+```bash
+make test
+```
+
 **Status**: Under Development
