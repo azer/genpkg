@@ -1,6 +1,8 @@
 var genpkg = require('../lib/genpkg'),
+    index = require('../lib/index'),
     logging = require('../lib/logging'),
     assert = require('assert'),
+    kick = require('highkick'),
     fs = require('fs');
 
 function test_manifest(callback){
@@ -13,9 +15,6 @@ function test_manifest(callback){
   });
 
   assert.equal(manifest.name, 'foo');
-  assert.equal(manifest.sha1, '2fd4e1c67a2d28fced849ee1bb76e7391b93eb12');
-  assert.equal(manifest.uri, uri);
-
   assert.equal(manifest.uri, uri);
 
   callback();
@@ -33,12 +32,12 @@ function test_fetch_http(callback){
 }
 
 function test_fetch_local(callback){
-  var filename = 'helloworld.txt',
+  var filename = 'tmp/helloworld.txt',
       content = 'hello world';
 
   fs.writeFile(filename, content, function(error) {
     if(error) {
-      logging.error('Failed to write /tmp/helloworld.txt');
+      logging.error('Failed to write tmp/helloworld.txt');
       return callback(error);
     }
     
@@ -54,26 +53,85 @@ function test_fetch_local(callback){
   });
 }
 
-function test_genpkg(callback){
-  genpkg.genpkg({ uri:'http://kodfabrik.com/helloworld.js'}, function(error, result){
+function test_pkg(callback){
+  genpkg.pkg({ uri:'http://kodfabrik.com/helloworld.js'}, function(error, result){
     assert.equal(result.content, 'console.log(\'hello world\');\n');
     assert.equal(result.manifest.name, 'helloworld');
-    assert.equal(result.manifest.main, './lib/helloworld');
+    assert.equal(result.manifest.main, 'helloworld');
     callback();
   });
 }
 
 function test_save(callback){
-  callback(new Error('not implemented'));
+  var i = 0;
+  genpkg.save({ 'target':'tmp/foo', 'uri':'http://foo', 'manifest':{ 'name':'foo', 'main':'./quux' }, 'content':'3.14' }, function(saveError){
+    if(saveError) return callback(saveError);
+
+    assert.equal(++i, 1);
+
+    index.valueOf('foo', function(indexReadError, value){
+
+      if(indexReadError) return callback(indexReadError);
+
+      assert.equal(value.sha1, index.encrypt('3.14'));
+      assert.equal(value.uri, 'http://foo');
+
+      fs.readFile('tmp/foo/package.json', function(manifestReadError, manifestContent){
+
+        if(manifestReadError) return callback(manifestReadError);
+
+        fs.readFile('tmp/foo/quux.js', function(moduleReadError, moduleContent){
+
+          if(moduleReadError) return callback(moduleReadError);
+
+          var manifest = JSON.parse(manifestContent);
+
+          assert.equal(manifest.name, 'foo');
+          assert.equal(moduleContent, '3.14');
+          callback();
+        });
+        
+      });
+
+    });
+  });
 }
 
-function test_sha1(callback){
-  assert.equal(genpkg.sha1('The quick brown fox jumps over the lazy dog'), '2fd4e1c67a2d28fced849ee1bb76e7391b93eb12');
-  callback();
+
+function test_index(callback){
+  kick({ module:require('./index'), ordered:true, name:'index' }, function(error, result){
+    !error && result.fail && ( error = new Error('Index tests failed.') );
+    
+    fs.unlink('.genpkg', function(unlinkError){
+      callback(error || unlinkError);
+    });
+  });
 }
 
 function test_update(callback){
-  callback(new Error('not implemented'));
+  var doc1 = 'The quick brown fox jumps over the lazy dog',
+      doc2 = 'The quick brown rabbit jumps over the lazy dog';
+
+  fs.writeFileSync('tmp/quickfox.txt',doc1);
+
+  genpkg.save({ 'target':'tmp/corge', 'uri':'tmp/quickfox.txt', 'manifest':{ 'name':'corge', 'main':'./lib/eggs.js' }, 'content':doc1 }, function(saveError){
+    if(saveError) return callback(saveError);
+
+    genpkg.update('corge', function(updateError, updated){
+      if(updateError) return callback(updateError);
+      assert.ok(!updated);
+
+      fs.writeFileSync('tmp/quickfox.txt',doc2);
+
+      genpkg.update('corge', function(updateError, updated){
+        if(updateError) return callback(updateError);
+        assert.ok(updated);        
+
+        callback();
+      });
+    });
+
+  });
 }
 
 
@@ -81,8 +139,8 @@ module.exports = {
   'test_manifest':test_manifest,
   'test_fetch_http':test_fetch_http,
   'test_fetch_local':test_fetch_local,
-  'test_genpkg':test_genpkg,
+  'test_pkg':test_pkg,
   'test_save':test_save,
-  'test_sha1':test_sha1,
+  'test_index':test_index,
   'test_update':test_update
 }

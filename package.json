@@ -6,13 +6,18 @@
   "keywords":["package","packaging"],
   "directories":{ "lib": "./lib" },
   "main":"./lib/genpkg",
-  "repository": { "type":"git", "url" : "http://github.com/azer/genpkg-node.git" },
+  "repository": { "type":"git", "url" : "http://github.com/azer/genpkg.git" },
   "bin":{
-    "genpkg":"./bin/genpkg"
+    "genpkg":"./bin/genpkg",
+    "test":"./test/run"
+  },
+  "devDependencies":{
+    "highkick":"1.x",
+    "rimraf":"1.x"
   },
   "dependencies":{
     "request":"2.x",
-    "highkick":"1.x",
-    "log4js":"0.x"
+    "log4js":"0.x",
+    "mkdirp":"0.x"
   }
 }
