@@ -1,4 +1,4 @@
-genpkg simplifies installation and update for unpackaged JavaScript files.
+genpkg simplifies installation and update of unpackaged JavaScript files.
 
 ## Usage Example
 ```bash
