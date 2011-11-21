@@ -25,3 +25,8 @@ $ npm install genpkg
 ```bash
 make test
 ```
+
+## TODO
+
+* Add export code if the module doesn't contain any
+* Support rename
