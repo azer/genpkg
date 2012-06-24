@@ -18,7 +18,7 @@ var genpkg = require('../lib/genpkg'),
     index = require('../lib/index'),
     logging = require('../lib/logging'),
     path = require('path'),
-    puts = require('sys').puts,
+    puts = require('util').puts,
     buildOptions = {};
 
 var opt = require('optimist'),
