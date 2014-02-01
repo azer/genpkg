@@ -1,24 +1,32 @@
 {
-  "name":"genpkg",
-  "version":"0.0.1",
-  "description":"Generates NPM packages from single JavaScript files.",
-  "author":"Azer Koculu <azer@kodfabrik.com>",
-  "keywords":["package","packaging"],
-  "directories":{ "lib": "./lib" },
-  "main":"./lib/genpkg",
-  "repository": { "type":"git", "url" : "http://github.com/azer/genpkg.git" },
-  "bin":{
-    "genpkg":"./bin/genpkg",
-    "test":"./test/run"
+  "name": "genpkg",
+  "version": "0.0.2",
+  "description": "Generates NPM packages from single JavaScript files.",
+  "author": "Azer Koculu <azer@kodfabrik.com>",
+  "keywords": [
+    "package",
+    "packaging"
+  ],
+  "directories": {
+    "lib": "./lib"
   },
-  "devDependencies":{
-    "highkick":"1.x",
-    "rimraf":"1.x"
+  "main": "./lib/genpkg",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/azer/genpkg.git"
   },
-  "dependencies":{
+  "bin": {
+    "genpkg": "./bin/genpkg",
+    "test": "./test/run"
+  },
+  "devDependencies": {
+    "highkick": "1.x",
+    "rimraf": "1.x"
+  },
+  "dependencies": {
     "optimist": "~0.6.0",
-    "request":"2.x",
-    "log4js":"0.x",
-    "mkdirp":"0.x"
+    "request": "2.x",
+    "log4js": "0.x",
+    "mkdirp": "0.x"
   }
 }
