@@ -16,6 +16,7 @@
     "rimraf":"1.x"
   },
   "dependencies":{
+    "optimist": "~0.6.0",
     "request":"2.x",
     "log4js":"0.x",
     "mkdirp":"0.x"
