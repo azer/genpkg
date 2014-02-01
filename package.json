@@ -1,6 +1,6 @@
 {
   "name": "genpkg",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generates NPM packages from single JavaScript files.",
   "author": "Azer Koculu <azer@kodfabrik.com>",
   "keywords": [
